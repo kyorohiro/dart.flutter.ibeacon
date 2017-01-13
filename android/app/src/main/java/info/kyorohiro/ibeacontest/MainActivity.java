@@ -23,5 +23,19 @@ public class MainActivity extends Activity {
         rootLayout.addView(flutterView);
 
         flutterView.runFromBundle(FlutterMain.findAppBundlePath(getApplicationContext()), null);
+
+        flutterView.addOnMessageListener("callback_sync", new FlutterView.OnMessageListener(){
+            @Override
+            public String onMessage(FlutterView flutterView, String message) {
+                return "hi sync" + message;
+            }
+        });
+
+        flutterView.addOnMessageListenerAsync("callback_async", new FlutterView.OnMessageListenerAsync() {
+            @Override
+            public void onMessage(FlutterView flutterView, String message, FlutterView.MessageResponse messageResponse) {
+                messageResponse.send("hi async" + message);
+            }
+        });
     }
 }
