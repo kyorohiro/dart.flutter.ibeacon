@@ -1,8 +1,12 @@
-# dart
+# Dart x Flutter
 
-A new flutter project.
+# License
+ibeacon app test
+./android/buildSrc is copy from https://github.com/flutter/flutter/tree/master/examples/hello_services
 
-## Getting Started
 
-For help getting started with Flutter, view our online
-[documentation](http://flutter.io/).
+# Setting
+- android/local.properties
+flutter.sdk=/Users/kyorohiro/tools/git/flutter
+sdk.dir=/Users/kyorohiro/Library/Android/sdk
+

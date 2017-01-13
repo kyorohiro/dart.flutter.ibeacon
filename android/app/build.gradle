@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'flutter'
 
 android {
     compileSdkVersion 25
@@ -17,6 +18,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+flutter {
+    source '../..'
 }
 
 dependencies {
