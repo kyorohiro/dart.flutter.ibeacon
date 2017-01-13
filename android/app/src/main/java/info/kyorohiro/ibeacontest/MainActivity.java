@@ -7,6 +7,9 @@ import android.widget.LinearLayout;
 import io.flutter.view.FlutterMain;
 import io.flutter.view.FlutterView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by kyorohiro on 2017/01/13.
  */
@@ -35,6 +38,24 @@ public class MainActivity extends Activity {
             @Override
             public void onMessage(FlutterView flutterView, String message, FlutterView.MessageResponse messageResponse) {
                 messageResponse.send("hi async" + message);
+            }
+        });
+
+        flutterView.addOnMessageListenerAsync("callback_proc", new FlutterView.OnMessageListenerAsync() {
+            @Override
+            public void onMessage(FlutterView flutterView, String message, final FlutterView.MessageResponse messageResponse) {
+                JSONObject jsonMessage = new JSONObject();
+                try {
+                    jsonMessage.put("vvv", 100);
+                } catch(JSONException e){
+                }
+                //jsonMessage.put("v",1);
+                flutterView.sendToFlutter("hi", jsonMessage.toString(), new FlutterView.MessageReplyCallback() {
+                    @Override
+                    public void onReply(String s) {
+                        messageResponse.send(s);
+                    }
+                });
             }
         });
     }
