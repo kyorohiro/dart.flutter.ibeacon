@@ -26,10 +26,13 @@ public class MainActivity extends Activity {
     Map<Integer, FlutterView.MessageResponse> permissionResponse = new HashMap();
 
     void requestLocationPermission(final FlutterView.MessageResponse messageResponse) {
+//        messageResponse.send("hi async" );
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+           if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // need permission
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+               permissionResponse.put(requestIdBase++,messageResponse);
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, requestIdBase-1);
             } else {
                 JSONObject jsonMessage = new JSONObject();
                 try {
@@ -83,36 +86,12 @@ public class MainActivity extends Activity {
 
         flutterView.runFromBundle(FlutterMain.findAppBundlePath(getApplicationContext()), null);
 
-        flutterView.addOnMessageListener("callback_sync", new FlutterView.OnMessageListener(){
-            @Override
-            public String onMessage(FlutterView flutterView, String message) {
-                return "hi sync" + message;
-            }
-        });
-
-        flutterView.addOnMessageListenerAsync("callback_async", new FlutterView.OnMessageListenerAsync() {
+        flutterView.addOnMessageListenerAsync("requestPermission", new FlutterView.OnMessageListenerAsync() {
             @Override
             public void onMessage(FlutterView flutterView, String message, FlutterView.MessageResponse messageResponse) {
-                messageResponse.send("hi async" + message);
+                requestLocationPermission(messageResponse);
             }
         });
 
-        flutterView.addOnMessageListenerAsync("callback_proc", new FlutterView.OnMessageListenerAsync() {
-            @Override
-            public void onMessage(FlutterView flutterView, String message, final FlutterView.MessageResponse messageResponse) {
-                JSONObject jsonMessage = new JSONObject();
-                try {
-                    jsonMessage.put("vvv", 100);
-                } catch(JSONException e){
-                }
-                //jsonMessage.put("v",1);
-                flutterView.sendToFlutter("hi", jsonMessage.toString(), new FlutterView.MessageReplyCallback() {
-                    @Override
-                    public void onReply(String s) {
-                        messageResponse.send(s);
-                    }
-                });
-            }
-        });
     }
 }

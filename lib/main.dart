@@ -37,20 +37,13 @@ class _MyHomePageState extends State<MyHomePage> {
   String message = "";
 
    _incrementCounter() async {
-     //
-    ByteData buffer0 = await fsv.PlatformMessages.sendBinary("callback_sync", new ByteData.view(
-      new Uint8List.fromList([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]).buffer
-    ));
-
     //
-    String buffer1 = await fsv.PlatformMessages.sendString("callback_async", JSON.encode({"test":"hello"}));
+    String buffer1 = await fsv.PlatformMessages.sendString("requestPermission", JSON.encode({"test":"hello"}));
 
-    //
-    String buffer2 = await fsv.PlatformMessages.sendString("callback_proc", "hello");
 
 
     //
-    message = "${buffer0.buffer.asUint8List()} :: ${buffer1} :: ${buffer2}" ;
+    message = ":: ${buffer1} :: " ;
     setState(() {
       _counter++;
     });
