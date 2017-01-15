@@ -7,7 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
+import info.kyorohiro.tinybeacon.TinyAdPacket;
 import info.kyorohiro.tinybeacon.TinyBeacon;
+import info.kyorohiro.tinybeacon.TinyIBeaconPacket;
 import io.flutter.view.FlutterMain;
 import io.flutter.view.FlutterView;
 
@@ -167,5 +169,69 @@ public class MainActivity extends Activity {
             }
         });
 
+        flutterView.addOnMessageListenerAsync("beacon.stopAdvertiseBeacon", new FlutterView.OnMessageListenerAsync() {
+            @Override
+            public void onMessage(FlutterView flutterView, String message, FlutterView.MessageResponse messageResponse) {
+                try {
+                    beacon.stopAdvertise();
+                    JSONObject jsonMessage = new JSONObject();
+                    try {
+                        jsonMessage.put("r", "ok");
+                    } catch(Exception ee) {
+                        messageResponse.send(jsonMessage.toString());
+                    }
+                } catch(Exception e) {
+                    JSONObject jsonMessage = new JSONObject();
+                    try {
+                        jsonMessage.put("r", "ng");
+                    } catch(Exception ee) {
+                        messageResponse.send(jsonMessage.toString());
+                    }
+                }
+            }
+        });
+
+        flutterView.addOnMessageListenerAsync("beacon.startAdvertiseBeacon", new FlutterView.OnMessageListenerAsync() {
+            @Override
+            public void onMessage(FlutterView flutterView, String message, final FlutterView.MessageResponse messageResponse) {
+                try {/*
+                    byte[] cont = TinyIBeaconPacket.getUUIDBytesAsIBeacon("AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE");
+                    beacon.startAdvertise(MainActivity.this, cont, 1,2,-60,new TinyBeacon.AdvertiseCallback(){
+                        @Override
+                        public void onStartSuccess(TinyBeacon.AdvertiseCallbackParam advertiseCallbackParam) {
+                            JSONObject jsonMessage = new JSONObject();
+                            try {
+                                jsonMessage.put("r", "ok");
+                            } catch(Exception ee) {
+                                messageResponse.send(jsonMessage.toString());
+                            }
+                        }
+
+                        @Override
+                        public void onStartFailure(int i) {
+                            JSONObject jsonMessage = new JSONObject();
+                            try {
+                                jsonMessage.put("r", "ng");
+                            } catch(Exception ee) {
+                                messageResponse.send(jsonMessage.toString());
+                            }
+                        }
+                    });*/
+                    JSONObject jsonMessage = new JSONObject();
+                    try {
+                        jsonMessage.put("r", "ok");
+                    } catch(Exception ee) {
+                        messageResponse.send(jsonMessage.toString());
+                    }
+                } catch(Exception e) {
+                    JSONObject jsonMessage = new JSONObject();
+                    try {
+                        jsonMessage.put("r", "ng");
+                    } catch(Exception ee) {
+                        messageResponse.send(jsonMessage.toString());
+                    }
+                }
+            }
+        });
     }
 }
