@@ -132,6 +132,40 @@ public class MainActivity extends Activity {
                 }
             }
         });
+        flutterView.addOnMessageListenerAsync("beacon.getFoundBeacon", new FlutterView.OnMessageListenerAsync() {
+            @Override
+            public void onMessage(FlutterView flutterView, String message, FlutterView.MessageResponse messageResponse) {
+                try {
+                    messageResponse.send(beacon.getFoundedBeeaconAsJSONText());
+                    JSONObject jsonMessage = new JSONObject();
+                    jsonMessage.put("r", "ok");
+                    messageResponse.send(jsonMessage.toString());
+                } catch(Exception e) {
+                    JSONObject jsonMessage = new JSONObject();
+                    try {
+                        jsonMessage.put("r", "ng");
+                    } catch(Exception ee) {
+                        messageResponse.send(jsonMessage.toString());
+                    }
+                }
+            }
+        });
+        flutterView.addOnMessageListenerAsync("beacon.clearFoundBeacon", new FlutterView.OnMessageListenerAsync() {
+            @Override
+            public void onMessage(FlutterView flutterView, String message, FlutterView.MessageResponse messageResponse) {
+                try {
+                    beacon.clearFoundedBeeacon();
+                    messageResponse.send(beacon.getFoundedBeeaconAsJSONText());
+                } catch(Exception e) {
+                    JSONObject jsonMessage = new JSONObject();
+                    try {
+                        jsonMessage.put("r", "ng");
+                    } catch(Exception ee) {
+                        messageResponse.send(jsonMessage.toString());
+                    }
+                }
+            }
+        });
 
     }
 }
