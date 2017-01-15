@@ -41,17 +41,21 @@ class _MyHomePageState extends State<MyHomePage> {
     //
      String buffer1 = await fsv.PlatformMessages.sendString("beacon.requestPermission", JSON.encode({"test":"hello"}));
      String buffer2 = "-";
-     //if(buffer1 == """{"r":"ok"}""")
+     if(buffer1 == """{"r":"ok"}""")
      {
-       String buffer2 = await fsv.PlatformMessages.sendString("beacon.startLescan", JSON.encode({"test":"hello"}));
+       buffer2 = await fsv.PlatformMessages.sendString("beacon.startLescan", JSON.encode({"test":"hello"}));
      }
+
+
      message = ":: ${buffer1} :: ${buffer2}";
      setState(() {});
-
+     await new Future.delayed(new Duration(seconds: 2));
+     String buffer4 = await fsv.PlatformMessages.sendString("beacon.startAdvertiseBeacon", JSON.encode({"test":"hello"}));
+     setState(() {});
 
      await new Future.delayed(new Duration(seconds: 5));
      String buffer3 = await fsv.PlatformMessages.sendString("beacon.getFoundBeacon", JSON.encode({"test":"hello"}));
-     message = buffer3;
+     message = buffer3 + buffer4;
      setState(() {});
 
 

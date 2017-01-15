@@ -194,42 +194,39 @@ public class MainActivity extends Activity {
         flutterView.addOnMessageListenerAsync("beacon.startAdvertiseBeacon", new FlutterView.OnMessageListenerAsync() {
             @Override
             public void onMessage(FlutterView flutterView, String message, final FlutterView.MessageResponse messageResponse) {
-                try {/*
-                    byte[] cont = TinyIBeaconPacket.getUUIDBytesAsIBeacon("AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE");
+                try {
+                    final byte[] cont = TinyIBeaconPacket.getUUIDBytesAsIBeacon("AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE");
+
                     beacon.startAdvertise(MainActivity.this, cont, 1,2,-60,new TinyBeacon.AdvertiseCallback(){
                         @Override
                         public void onStartSuccess(TinyBeacon.AdvertiseCallbackParam advertiseCallbackParam) {
                             JSONObject jsonMessage = new JSONObject();
                             try {
-                                jsonMessage.put("r", "ok");
+                                jsonMessage.put("r", "1ok");
                             } catch(Exception ee) {
-                                messageResponse.send(jsonMessage.toString());
                             }
+                            messageResponse.send(jsonMessage.toString());
                         }
 
                         @Override
                         public void onStartFailure(int i) {
                             JSONObject jsonMessage = new JSONObject();
                             try {
-                                jsonMessage.put("r", "ng");
+                                jsonMessage.put("r", "2ng"+cont.toString()+":"+i);
                             } catch(Exception ee) {
-                                messageResponse.send(jsonMessage.toString());
                             }
+                            messageResponse.send(jsonMessage.toString());
+
                         }
-                    });*/
-                    JSONObject jsonMessage = new JSONObject();
-                    try {
-                        jsonMessage.put("r", "ok");
-                    } catch(Exception ee) {
-                        messageResponse.send(jsonMessage.toString());
-                    }
+                    });
                 } catch(Exception e) {
                     JSONObject jsonMessage = new JSONObject();
                     try {
-                        jsonMessage.put("r", "ng");
+                        jsonMessage.put("r", "3ng"+":"+e.toString());
                     } catch(Exception ee) {
-                        messageResponse.send(jsonMessage.toString());
                     }
+                    messageResponse.send(jsonMessage.toString());
+
                 }
             }
         });
