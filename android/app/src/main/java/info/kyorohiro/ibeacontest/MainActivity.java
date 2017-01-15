@@ -26,26 +26,26 @@ public class MainActivity extends Activity {
     Map<Integer, FlutterView.MessageResponse> permissionResponse = new HashMap();
 
     void requestLocationPermission(final FlutterView.MessageResponse messageResponse) {
-//        messageResponse.send("hi async" );
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-           if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // need permission
-               permissionResponse.put(requestIdBase++,messageResponse);
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, requestIdBase-1);
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    permissionResponse.put(requestIdBase++, messageResponse);
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, requestIdBase - 1);
+                } else {
+                    JSONObject jsonMessage = new JSONObject();
+                    jsonMessage.put("r", "ok");
+                    messageResponse.send(jsonMessage.toString());
+                }
             } else {
                 JSONObject jsonMessage = new JSONObject();
-                try {
-                    jsonMessage.put("r", "ok");
-                } catch (JSONException e) {
-                }
+                jsonMessage.put("r", "ng");
                 messageResponse.send(jsonMessage.toString());
             }
-        } else {
+        } catch (Exception e) {
             JSONObject jsonMessage = new JSONObject();
             try {
-                jsonMessage.put("r", "ok");
-            } catch (JSONException e) {
+                jsonMessage.put("r", "ng");
+            } catch (JSONException ee) {
             }
             messageResponse.send(jsonMessage.toString());
         }
@@ -54,20 +54,23 @@ public class MainActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(permissionResponse.containsKey(requestCode)){
+        if (permissionResponse.containsKey(requestCode)) {
             FlutterView.MessageResponse messageResponse = permissionResponse.remove(requestCode);
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                JSONObject jsonMessage = new JSONObject();
-                try {
+            try {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    JSONObject jsonMessage = new JSONObject();
                     jsonMessage.put("r", "ok");
-                } catch(JSONException e){
+                    messageResponse.send(jsonMessage.toString());
+                } else {
+                    JSONObject jsonMessage = new JSONObject();
+                    jsonMessage.put("r", "ng");
+                    messageResponse.send(jsonMessage.toString());
                 }
-                messageResponse.send(jsonMessage.toString());
-            } else {
+            } catch (Exception e) {
                 JSONObject jsonMessage = new JSONObject();
                 try {
-                    jsonMessage.put("r", "ok");
-                } catch(JSONException e){
+                    jsonMessage.put("r", "ng");
+                } catch (JSONException ee) {
                 }
                 messageResponse.send(jsonMessage.toString());
             }
