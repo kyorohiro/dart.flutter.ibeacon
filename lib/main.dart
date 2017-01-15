@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
    _incrementCounter() async {
     //
-    String buffer1 = await fsv.PlatformMessages.sendString("requestPermission", JSON.encode({"test":"hello"}));
+    String buffer1 = await fsv.PlatformMessages.sendString("beacon.requestPermission", JSON.encode({"test":"hello"}));
 
 
 

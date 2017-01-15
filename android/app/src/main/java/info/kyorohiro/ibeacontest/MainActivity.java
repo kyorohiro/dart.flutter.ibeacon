@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
+import info.kyorohiro.tinybeacon.TinyBeacon;
 import io.flutter.view.FlutterMain;
 import io.flutter.view.FlutterView;
 
@@ -24,7 +25,7 @@ import java.util.Map;
 public class MainActivity extends Activity {
     int requestIdBase = 0;
     Map<Integer, FlutterView.MessageResponse> permissionResponse = new HashMap();
-
+    TinyBeacon  beacon = new TinyBeacon();
     void requestLocationPermission(final FlutterView.MessageResponse messageResponse) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -38,7 +39,7 @@ public class MainActivity extends Activity {
                 }
             } else {
                 JSONObject jsonMessage = new JSONObject();
-                jsonMessage.put("r", "ng");
+                jsonMessage.put("r", "ok");
                 messageResponse.send(jsonMessage.toString());
             }
         } catch (Exception e) {
@@ -89,10 +90,46 @@ public class MainActivity extends Activity {
 
         flutterView.runFromBundle(FlutterMain.findAppBundlePath(getApplicationContext()), null);
 
-        flutterView.addOnMessageListenerAsync("requestPermission", new FlutterView.OnMessageListenerAsync() {
+        flutterView.addOnMessageListenerAsync("beacon.requestPermission", new FlutterView.OnMessageListenerAsync() {
             @Override
             public void onMessage(FlutterView flutterView, String message, FlutterView.MessageResponse messageResponse) {
                 requestLocationPermission(messageResponse);
+            }
+        });
+        flutterView.addOnMessageListenerAsync("beacon.startLescan", new FlutterView.OnMessageListenerAsync() {
+            @Override
+            public void onMessage(FlutterView flutterView, String message, FlutterView.MessageResponse messageResponse) {
+                try {
+                    beacon.startLescan(MainActivity.this);
+                    JSONObject jsonMessage = new JSONObject();
+                    jsonMessage.put("r", "ok");
+                    messageResponse.send(jsonMessage.toString());
+                } catch(Exception e) {
+                    JSONObject jsonMessage = new JSONObject();
+                    try {
+                        jsonMessage.put("r", "ng");
+                    } catch(Exception ee) {
+                        messageResponse.send(jsonMessage.toString());
+                    }
+                }
+            }
+        });
+        flutterView.addOnMessageListenerAsync("beacon.stopLescan", new FlutterView.OnMessageListenerAsync() {
+            @Override
+            public void onMessage(FlutterView flutterView, String message, FlutterView.MessageResponse messageResponse) {
+                try {
+                    beacon.stopLescan();
+                    JSONObject jsonMessage = new JSONObject();
+                    jsonMessage.put("r", "ok");
+                    messageResponse.send(jsonMessage.toString());
+                } catch(Exception e) {
+                    JSONObject jsonMessage = new JSONObject();
+                    try {
+                        jsonMessage.put("r", "ng");
+                    } catch(Exception ee) {
+                        messageResponse.send(jsonMessage.toString());
+                    }
+                }
             }
         });
 
