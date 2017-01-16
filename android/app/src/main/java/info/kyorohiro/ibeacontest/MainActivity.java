@@ -35,22 +35,13 @@ public class MainActivity extends Activity {
                     permissionResponse.put(requestIdBase++, messageResponse);
                     requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, requestIdBase - 1);
                 } else {
-                    JSONObject jsonMessage = new JSONObject();
-                    jsonMessage.put("r", "ok");
-                    messageResponse.send(jsonMessage.toString());
+                    messageResponse.send("{\"r\":\"ok\"}");
                 }
             } else {
-                JSONObject jsonMessage = new JSONObject();
-                jsonMessage.put("r", "ok");
-                messageResponse.send(jsonMessage.toString());
+                messageResponse.send("{\"r\":\"ok\"}");
             }
         } catch (Exception e) {
-            JSONObject jsonMessage = new JSONObject();
-            try {
-                jsonMessage.put("r", "ng");
-            } catch (JSONException ee) {
-            }
-            messageResponse.send(jsonMessage.toString());
+            messageResponse.send("{\"r\":\"ng\"}");
         }
     }
 
@@ -61,21 +52,12 @@ public class MainActivity extends Activity {
             FlutterView.MessageResponse messageResponse = permissionResponse.remove(requestCode);
             try {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    JSONObject jsonMessage = new JSONObject();
-                    jsonMessage.put("r", "ok");
-                    messageResponse.send(jsonMessage.toString());
+                    messageResponse.send("{\"r\":\"ok\"}");
                 } else {
-                    JSONObject jsonMessage = new JSONObject();
-                    jsonMessage.put("r", "ng");
-                    messageResponse.send(jsonMessage.toString());
+                    messageResponse.send("{\"r\":\"ng\"}");
                 }
             } catch (Exception e) {
-                JSONObject jsonMessage = new JSONObject();
-                try {
-                    jsonMessage.put("r", "ng");
-                } catch (JSONException ee) {
-                }
-                messageResponse.send(jsonMessage.toString());
+                messageResponse.send("{\"r\":\"ng\"}");
             }
         }
     }
@@ -103,16 +85,9 @@ public class MainActivity extends Activity {
             public void onMessage(FlutterView flutterView, String message, FlutterView.MessageResponse messageResponse) {
                 try {
                     beacon.startLescan(MainActivity.this);
-                    JSONObject jsonMessage = new JSONObject();
-                    jsonMessage.put("r", "ok");
-                    messageResponse.send(jsonMessage.toString());
+                    messageResponse.send("{\"r\":\"ok\"}");
                 } catch(Exception e) {
-                    JSONObject jsonMessage = new JSONObject();
-                    try {
-                        jsonMessage.put("r", "ng");
-                    } catch(Exception ee) {
-                        messageResponse.send(jsonMessage.toString());
-                    }
+                    messageResponse.send("{\"r\":\"ng\"}");
                 }
             }
         });
@@ -121,16 +96,9 @@ public class MainActivity extends Activity {
             public void onMessage(FlutterView flutterView, String message, FlutterView.MessageResponse messageResponse) {
                 try {
                     beacon.stopLescan();
-                    JSONObject jsonMessage = new JSONObject();
-                    jsonMessage.put("r", "ok");
-                    messageResponse.send(jsonMessage.toString());
+                    messageResponse.send("{\"r\":\"ok\"}");
                 } catch(Exception e) {
-                    JSONObject jsonMessage = new JSONObject();
-                    try {
-                        jsonMessage.put("r", "ng");
-                    } catch(Exception ee) {
-                        messageResponse.send(jsonMessage.toString());
-                    }
+                    messageResponse.send("{\"r\":\"ng\"}");
                 }
             }
         });
@@ -138,17 +106,10 @@ public class MainActivity extends Activity {
             @Override
             public void onMessage(FlutterView flutterView, String message, FlutterView.MessageResponse messageResponse) {
                 try {
-                    messageResponse.send(beacon.getFoundedBeeaconAsJSONText());
-                    JSONObject jsonMessage = new JSONObject();
-                    jsonMessage.put("r", "ok");
-                    messageResponse.send(jsonMessage.toString());
+                    messageResponse.send(beacon.getFoundedIBeaconAsJSONText());
                 } catch(Exception e) {
                     JSONObject jsonMessage = new JSONObject();
-                    try {
-                        jsonMessage.put("r", "ng");
-                    } catch(Exception ee) {
-                        messageResponse.send(jsonMessage.toString());
-                    }
+                    messageResponse.send("{\"r\":\"ng\"}");
                 }
             }
         });
@@ -156,15 +117,10 @@ public class MainActivity extends Activity {
             @Override
             public void onMessage(FlutterView flutterView, String message, FlutterView.MessageResponse messageResponse) {
                 try {
-                    beacon.clearFoundedBeeacon();
-                    messageResponse.send(beacon.getFoundedBeeaconAsJSONText());
+                    beacon.clearFoundedIBeacon();
+                    messageResponse.send("{\"r\":\"ok\"}");
                 } catch(Exception e) {
-                    JSONObject jsonMessage = new JSONObject();
-                    try {
-                        jsonMessage.put("r", "ng");
-                    } catch(Exception ee) {
-                        messageResponse.send(jsonMessage.toString());
-                    }
+                    messageResponse.send("{\"r\":\"ng\"}");
                 }
             }
         });
@@ -173,20 +129,10 @@ public class MainActivity extends Activity {
             @Override
             public void onMessage(FlutterView flutterView, String message, FlutterView.MessageResponse messageResponse) {
                 try {
-                    beacon.stopAdvertise();
-                    JSONObject jsonMessage = new JSONObject();
-                    try {
-                        jsonMessage.put("r", "ok");
-                    } catch(Exception ee) {
-                        messageResponse.send(jsonMessage.toString());
-                    }
+                    beacon.stopAdvertiseIBeacon();
+                    messageResponse.send("{\"r\":\"ok\"}");
                 } catch(Exception e) {
-                    JSONObject jsonMessage = new JSONObject();
-                    try {
-                        jsonMessage.put("r", "ng");
-                    } catch(Exception ee) {
-                        messageResponse.send(jsonMessage.toString());
-                    }
+                    messageResponse.send("{\"r\":\"ng\"}");
                 }
             }
         });
@@ -195,38 +141,21 @@ public class MainActivity extends Activity {
             @Override
             public void onMessage(FlutterView flutterView, String message, final FlutterView.MessageResponse messageResponse) {
                 try {
-                    final byte[] cont = TinyIBeaconPacket.getUUIDBytesAsIBeacon("AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE");
+                    final byte[] cont = TinyIBeaconPacket.createUUIDBytes("AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE");
 
-                    beacon.startAdvertise(MainActivity.this, cont, 1,2,-60,new TinyBeacon.AdvertiseCallback(){
+                    beacon.startAdvertiseIBeacon(MainActivity.this, cont, 1,2,-60,new TinyBeacon.AdvertiseCallback(){
                         @Override
                         public void onStartSuccess(TinyBeacon.AdvertiseCallbackParam advertiseCallbackParam) {
-                            JSONObject jsonMessage = new JSONObject();
-                            try {
-                                jsonMessage.put("r", "1ok");
-                            } catch(Exception ee) {
-                            }
-                            messageResponse.send(jsonMessage.toString());
+                            messageResponse.send("{\"r\":\"ok\"}");
                         }
 
                         @Override
                         public void onStartFailure(int i) {
-                            JSONObject jsonMessage = new JSONObject();
-                            try {
-                                jsonMessage.put("r", "2ng"+cont.toString()+":"+i);
-                            } catch(Exception ee) {
-                            }
-                            messageResponse.send(jsonMessage.toString());
-
+                            messageResponse.send("{\"r\":\"ng\"}");
                         }
                     });
                 } catch(Exception e) {
-                    JSONObject jsonMessage = new JSONObject();
-                    try {
-                        jsonMessage.put("r", "3ng"+":"+e.toString());
-                    } catch(Exception ee) {
-                    }
-                    messageResponse.send(jsonMessage.toString());
-
+                    messageResponse.send("{\"r\":\"ng\"}");
                 }
             }
         });
